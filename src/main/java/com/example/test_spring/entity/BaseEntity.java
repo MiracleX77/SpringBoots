@@ -1,4 +1,5 @@
 package com.example.test_spring.entity;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.Column;
@@ -7,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
+@Data
 @MappedSuperclass
 public abstract class BaseEntity {
     @Id
