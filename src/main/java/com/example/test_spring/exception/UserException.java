@@ -13,6 +13,11 @@ public class UserException extends BaseException {
         return new UserException("register.email.null");
     }
 
+    public static UserException notFound() {
+        return new UserException("not.found");
+    }
+
+
 
 // CREATE
 
@@ -32,6 +37,16 @@ public class UserException extends BaseException {
 
     public static  UserException verifyEmail(){
         return  new UserException("verify.email");
+    }
+
+    //LOGIN
+
+    public static UserException loginEmailNotFound() {
+        return new UserException("login.email.not.found1");
+    }
+
+    public static UserException loginPasswordIncorrect() {
+        return new UserException("login.password.incorrect");
     }
 
 }

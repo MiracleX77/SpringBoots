@@ -1,33 +1,28 @@
 package com.example.test_spring.config;
 
-
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @EnableWebSecurity
-public class SecurityConfig  {
+@Configuration
+
+public class SecurityConfig {
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception{
-        return http.build();
+    public SecurityFilterChain configur(HttpSecurity http) throws Exception{
+        return http.cors().disable().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeHttpRequests().requestMatchers("/user/register","/user/login").anonymous()
+                .anyRequest().authenticated().and().build();
     }
-    @Bean
-    public SecurityFilterChain configure(AuthenticationManagerBuilder auth) throws Exception{
-        return (SecurityFilterChain) auth.build();
-    }
-
-
-
-
-
 }

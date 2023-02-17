@@ -1,5 +1,6 @@
 package com.example.test_spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Data;
