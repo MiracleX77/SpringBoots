@@ -3,6 +3,7 @@ package com.example.test_spring.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,4 +21,8 @@ public class User extends BaseEntity{
     @Column(nullable = false,length =120)
     private String name;
 
+    private String civilId;
+
+    @OneToOne(mappedBy = "user",orphanRemoval = true)
+    private Social social;
 }

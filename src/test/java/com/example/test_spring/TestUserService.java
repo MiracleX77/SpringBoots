@@ -1,7 +1,9 @@
 package com.example.test_spring;
 
+import com.example.test_spring.entity.Social;
 import com.example.test_spring.entity.User;
 import com.example.test_spring.exception.BaseException;
+import com.example.test_spring.service.SocialService;
 import com.example.test_spring.service.UserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,8 @@ class TestUserService {
 
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private SocialService socialService;
 	@Order(1)
 	@Test
 	void testCreate() throws BaseException {
@@ -47,8 +50,29 @@ class TestUserService {
 		Assertions.assertNotNull(updatedUser);
 		Assertions.assertEquals(updatedUser.getName(),TestDataUpdate.name);
 	}
-
 	@Order(3)
+	@Test
+	void testCreateSocial() throws BaseException {
+		Optional<User> opt = userService.findByEmail(TestData.email);
+		Assertions.assertTrue(opt.isPresent());
+
+		User user = opt.get();
+
+		Social social = user.getSocial();
+		Assertions.assertNull(social);
+
+		social=socialService.create(user,
+				TestSocialCreate.facebook,
+				TestSocialCreate.line,
+				TestSocialCreate.instagram,
+				TestSocialCreate.tiktok);
+
+		Assertions.assertNotNull(social);
+		Assertions.assertEquals(social.getFacebook(),TestSocialCreate.facebook);
+	}
+
+
+	@Order(9)
 	@Test
 	void testDelete() {
 		Optional<User> opt = userService.findByEmail(TestData.email);
@@ -68,5 +92,15 @@ class TestUserService {
 
 	interface TestDataUpdate{
 		String name = "biggest";
+	}
+	interface TestSocialCreate{
+		String facebook = "phatchara";
+
+		String line="";
+
+		String instagram = "";
+
+		String tiktok = "";
+
 	}
 }
