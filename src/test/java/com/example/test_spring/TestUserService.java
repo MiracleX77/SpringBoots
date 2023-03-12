@@ -1,14 +1,17 @@
 package com.example.test_spring;
 
+import com.example.test_spring.entity.Address;
 import com.example.test_spring.entity.Social;
 import com.example.test_spring.entity.User;
 import com.example.test_spring.exception.BaseException;
+import com.example.test_spring.service.AddressService;
 import com.example.test_spring.service.SocialService;
 import com.example.test_spring.service.UserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -19,6 +22,9 @@ class TestUserService {
 	private UserService userService;
 	@Autowired
 	private SocialService socialService;
+
+	@Autowired
+	private AddressService addressService;
 	@Order(1)
 	@Test
 	void testCreate() throws BaseException {
@@ -70,7 +76,23 @@ class TestUserService {
 		Assertions.assertNotNull(social);
 		Assertions.assertEquals(social.getFacebook(),TestSocialCreate.facebook);
 	}
+	@Order(4)
+	@Test
+	void testCreateAddress(){
+		Optional<User> opt = userService.findByEmail(TestData.email);
+		Assertions.assertTrue(opt.isPresent());
+		User user = opt.get();
+		List<Address> addresses= user.getAddresses();
+		Assertions.assertTrue(addresses.isEmpty());
 
+		Address address = addressService.create(user,TestAddressCreate.line1,
+				TestAddressCreate.line2,TestAddressCreate.zipcode);
+		Assertions.assertNotNull(address);
+		Assertions.assertEquals(TestAddressCreate.line1,address.getLine1());
+		Assertions.assertEquals(TestAddressCreate.line2,address.getLine2());
+		Assertions.assertEquals(TestAddressCreate.zipcode,address.getZipcode());
+
+	}
 
 	@Order(9)
 	@Test
@@ -103,4 +125,12 @@ class TestUserService {
 		String tiktok = "";
 
 	}
+	interface TestAddressCreate{
+		String line1 ="bigzaa852";
+
+		String line2 = "asd";
+
+		String zipcode = "84160";
+	}
+
 }

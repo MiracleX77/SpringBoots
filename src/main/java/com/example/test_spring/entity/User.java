@@ -1,11 +1,13 @@
 package com.example.test_spring.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -25,4 +27,7 @@ public class User extends BaseEntity{
 
     @OneToOne(mappedBy = "user",orphanRemoval = true)
     private Social social;
+
+    @OneToMany(mappedBy = "user")
+    private List<Address> addresses;
 }
