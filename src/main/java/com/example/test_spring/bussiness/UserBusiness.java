@@ -6,6 +6,7 @@ import com.example.test_spring.mapper.UserMapper;
 import com.example.test_spring.model.MLoginRequest;
 import com.example.test_spring.model.MRegisterRequest;
 import com.example.test_spring.model.MRegisterResponse;
+import com.example.test_spring.service.TokenService;
 import com.example.test_spring.service.UserService;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,11 @@ import java.util.Optional;
 public class UserBusiness {
     private final UserService userService;
     private final UserMapper userMapper;
-    public UserBusiness(UserService userService, UserMapper userMapper) {
+    private final TokenService tokenService;
+    public UserBusiness(UserService userService, UserMapper userMapper, TokenService tokenService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.tokenService = tokenService;
     }
     public String login(MLoginRequest request) throws BaseException{
         //validate request
@@ -36,7 +39,7 @@ public class UserBusiness {
 
         //TODO: generate JWT
 
-        String token ="JWT TO DO";
+        String token = tokenService.tokenize(user);
         return token;
     }
 

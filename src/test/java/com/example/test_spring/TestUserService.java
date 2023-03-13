@@ -85,13 +85,17 @@ class TestUserService {
 		List<Address> addresses= user.getAddresses();
 		Assertions.assertTrue(addresses.isEmpty());
 
-		Address address = addressService.create(user,TestAddressCreate.line1,
-				TestAddressCreate.line2,TestAddressCreate.zipcode);
-		Assertions.assertNotNull(address);
-		Assertions.assertEquals(TestAddressCreate.line1,address.getLine1());
-		Assertions.assertEquals(TestAddressCreate.line2,address.getLine2());
-		Assertions.assertEquals(TestAddressCreate.zipcode,address.getZipcode());
+		createAddress(user,TestAddressCreate.line1,TestAddressCreate.line2,TestAddressCreate.zipcode);
+		createAddress(user,TestAddressCreate2.line1,TestAddressCreate2.line2,TestAddressCreate2.zipcode);
 
+
+	}
+	private void createAddress(User user,String line1,String line2,String zipcode){
+		Address address = addressService.create(user,line1,line2,zipcode);
+		Assertions.assertNotNull(address);
+		Assertions.assertEquals(line1,address.getLine1());
+		Assertions.assertEquals(line2,address.getLine2());
+		Assertions.assertEquals(zipcode,address.getZipcode());
 	}
 
 	@Order(9)
@@ -100,6 +104,15 @@ class TestUserService {
 		Optional<User> opt = userService.findByEmail(TestData.email);
 		Assertions.assertTrue(opt.isPresent());
 		User user = opt.get();
+
+		Social social=user.getSocial();
+		Assertions.assertNotNull(social);
+		Assertions.assertEquals(social.getFacebook(),TestSocialCreate.facebook);
+
+		List<Address> addresses = user.getAddresses();
+		Assertions.assertEquals(2,addresses.size());
+		Assertions.assertFalse(addresses.isEmpty());
+
 		userService.deleteById(user.getId());
 		Optional<User> optDelete = userService.findByEmail(TestData.email);
 		Assertions.assertTrue(optDelete.isEmpty());
@@ -131,6 +144,13 @@ class TestUserService {
 		String line2 = "asd";
 
 		String zipcode = "84160";
+	}
+	interface TestAddressCreate2{
+		String line1 ="bigzaa8522";
+
+		String line2 = "asdasd";
+
+		String zipcode = "84161";
 	}
 
 }
