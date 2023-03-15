@@ -1,6 +1,8 @@
 package com.example.test_spring.config;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import com.example.test_spring.config.token.TokenFilter;
+import com.example.test_spring.config.token.tokenFilterConfiguerer;
+import com.example.test_spring.service.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 
 public class SecurityConfig {
+
+    private final TokenService tokenService;
+
+    public SecurityConfig(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -23,6 +32,9 @@ public class SecurityConfig {
         return http.cors().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests().requestMatchers("/user/register","/user/login").anonymous()
-                .anyRequest().authenticated().and().build();
+                .anyRequest().authenticated()
+                .and().apply(new tokenFilterConfiguerer(tokenService))
+                .and().build();
+
     }
 }

@@ -4,10 +4,7 @@ import com.example.test_spring.model.MLoginRequest;
 import com.example.test_spring.model.MRegisterResponse;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.test_spring.bussiness.UserBusiness;
 import com.example.test_spring.exception.BaseException;
@@ -32,6 +29,11 @@ public class UserApi {
     @PostMapping("/register")
     public ResponseEntity<MRegisterResponse> register(@RequestBody MRegisterRequest request) throws BaseException {
         MRegisterResponse response = business.register(request);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/refresh-token")
+    public ResponseEntity<String> refreshToken() throws BaseException{
+        String response = business.refreshToken();
         return ResponseEntity.ok(response);
     }
 }

@@ -8,6 +8,9 @@ import com.example.test_spring.model.MRegisterRequest;
 import com.example.test_spring.model.MRegisterResponse;
 import com.example.test_spring.service.TokenService;
 import com.example.test_spring.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.test_spring.exception.BaseException;
@@ -47,5 +50,18 @@ public class UserBusiness {
         User user = userService.create(request.getEmail(),request.getPassword(),request.getName());
         return userMapper.toRegisterResponse(user);
 
+    }
+
+    public String refreshToken() throws BaseException{
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        String userId = (String) authentication.getPrincipal();
+
+        Optional<User> opt = userService.findById(userId);
+        if(opt.isEmpty()){
+            throw UserException.notFound();
+        }
+        User user = opt.get();
+        return tokenService.tokenize(user);
     }
 }
