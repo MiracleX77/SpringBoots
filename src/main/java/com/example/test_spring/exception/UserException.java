@@ -17,6 +17,11 @@ public class UserException extends BaseException {
         return new UserException("not.found");
     }
 
+    public static UserException unAuthorized() {
+        return new UserException("unauthorized");
+    }
+
+
 
 
 // CREATE
