@@ -1,6 +1,7 @@
 package com.example.test_spring.api;
 
 import com.example.test_spring.bussiness.ChatBussiness;
+import com.example.test_spring.exception.BaseException;
 import com.example.test_spring.model.ChatMessageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ChatApi {
     }
 
     @PostMapping
-    public ResponseEntity<Void> post(@RequestBody ChatMessageRequest request){
+    public ResponseEntity<Void> post(@RequestBody ChatMessageRequest request) throws BaseException {
         bussiness.post(request);
         return  ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -23,7 +23,7 @@ public class SecurityConfig {
     private final TokenService tokenService;
 
     private final String[] PUBLIC = {
-            "/actuator/**","/user/register","/user/login","/socket"
+            "/actuator/**","/user/register","/user/login","/socket/**"
     };
 
     public SecurityConfig(TokenService tokenService) {
