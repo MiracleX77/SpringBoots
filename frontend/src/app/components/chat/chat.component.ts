@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as SockJS from 'sockjs-client';
+import { IChatMessage } from 'src/app/interfaces/i-chat-message';
+import { ChatService } from 'src/app/services/chat.service';
 import * as Stomp from 'stompjs';
 
 @Component({
@@ -12,15 +14,18 @@ export class ChatComponent implements OnInit {
 
   private stompClient: any;
   isConnected = false;
-  private CHANNEL ="chat";
+  private CHANNEL ="/topic/chat";
   private ENDPOINT = "http://localhost:8080/socket"
 
+  messages: IChatMessage[] = [];
 
   chatFormGroup: FormGroup = new FormGroup({
     message: new FormControl('',Validators.required)
   });
 
-  constructor(){}
+  constructor(
+    private chatService: ChatService
+  ){}
 
   private connectWebSocket(){
     let ws = new SockJS(this.ENDPOINT);
@@ -34,8 +39,12 @@ export class ChatComponent implements OnInit {
   }
 
   private subscribeToGlobalChat(){
+    let that = this
     this.stompClient.subscribe(this.CHANNEL,(message:any) =>{
       console.log(message);
+
+      let newMessage=JSON.parse(message.body) as IChatMessage
+      that.messages.push(newMessage)
     })
   }
   ngOnInit(): void {
@@ -43,6 +52,16 @@ export class ChatComponent implements OnInit {
   }
   onSubmit(){
     let message = this.chatFormGroup.controls['message'].value;
-    alert(message)
-  }
+    // is connected
+    if(!this.isConnected){
+      alert("Please connect to Websocket")
+      return
+    }
+    //validate message
+    this.chatService.postMessage(message).subscribe((response) =>{
+    },
+    (error) =>{
+      console.log(error)
+    })
+    }
 }

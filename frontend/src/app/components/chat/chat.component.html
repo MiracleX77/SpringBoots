@@ -6,3 +6,10 @@
     <input type="text" formControlName="message" placeholder="Message">
     <input type="submit" value="Send"[disabled]="chatFormGroup.invalid">
 </form>
+
+<h3>Messages</h3>
+<ul>
+    <li *ngFor="let message of messages">
+        {{message.from}} - {{message.message}} - {{message.created}}
+    </li>
+</ul>

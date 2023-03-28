@@ -22,7 +22,7 @@ public class ChatBussiness {
         if(opt.isEmpty()) {
             throw ChatException.accessDenied();
         }
-        final String destination = "chat";
+        final String destination = "/topic/chat";
 
         ChatMessage payload = new ChatMessage();
         payload.setFrom(opt.get());

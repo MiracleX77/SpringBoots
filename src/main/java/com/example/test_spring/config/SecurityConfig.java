@@ -15,6 +15,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 @EnableWebSecurity
 @Configuration
 
@@ -23,7 +26,7 @@ public class SecurityConfig {
     private final TokenService tokenService;
 
     private final String[] PUBLIC = {
-            "/actuator/**","/user/register","/user/login","/socket/**"
+            "/actuator/**","/user/register","/user/login","/socket/**","/chat/**"
     };
 
     public SecurityConfig(TokenService tokenService) {
@@ -49,7 +52,8 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
+//        config.addAllowedOrigin("http://localhost:4200");
+        config.setAllowedOriginPatterns(Arrays.asList("http://localhost*"));
         config.addAllowedHeader("*");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("POST");
