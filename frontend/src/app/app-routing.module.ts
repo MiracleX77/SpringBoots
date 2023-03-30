@@ -25,8 +25,13 @@ const routes: Routes = [
     path:'chat',
     component: ChatComponent,
     canActivate: [AuthGuardService]
-
+  },
+  {
+    path:'',
+    component: DashboardComponent,
+    canActivate: [AuthGuardService]
   }
+
 ];
 
 @NgModule({

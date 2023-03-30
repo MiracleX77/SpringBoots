@@ -27,6 +27,9 @@ export class ChatComponent implements OnInit {
     private chatService: ChatService
   ){}
 
+  ngOnInit(): void {
+    this.connectWebSocket();
+  }
   private connectWebSocket(){
     let ws = new SockJS(this.ENDPOINT);
     this.stompClient = Stomp.over(ws);
@@ -47,21 +50,18 @@ export class ChatComponent implements OnInit {
       that.messages.push(newMessage)
     })
   }
-  ngOnInit(): void {
-    this.connectWebSocket();
-  }
   onSubmit(){
-    let message = this.chatFormGroup.controls['message'].value;
-    // is connected
-    if(!this.isConnected){
-      alert("Please connect to Websocket")
-      return
-    }
-    //validate message
-    this.chatService.postMessage(message).subscribe((response) =>{
-    },
-    (error) =>{
-      console.log(error)
-    })
+      let message = this.chatFormGroup.controls['message'].value;
+      // is connected
+      if(!this.isConnected){
+        alert("Please connect to Websocket")
+        return
+      }
+      //validate message
+      this.chatService.postMessage(message).subscribe((response) =>{
+      },
+      (error) =>{
+        console.log(error)
+      })
     }
 }

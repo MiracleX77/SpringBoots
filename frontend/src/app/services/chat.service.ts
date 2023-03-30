@@ -12,6 +12,7 @@ export class ChatService {
 
   }
   postMessage(message:string) : Observable<IChatResponse>{
+    console.log(message)
     let url = "http://localhost:8080/chat/message";
     let body = {
       message: message

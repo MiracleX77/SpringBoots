@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Route, Router } from '@angular/router';
+import { AppCookieService } from 'src/app/services/app-cookie.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -13,8 +15,10 @@ export class LoginComponent {
     password: new FormControl('',Validators.required)
 
   });
-  constructor(private userService:UserService){
-
+  constructor(
+    private userService:UserService,
+    private appCookieService:AppCookieService,
+    private router:Router){
   }
 
   onSubmit():void{
@@ -26,9 +30,10 @@ export class LoginComponent {
 
 
     this.userService.login(email,password).subscribe((response)=>{
-      console.log(response);
+      this.appCookieService.setAccessToken(response.token);
+      this.router.navigate(['/dashboard'])
     },(error)=>{
-      console.log(error);
+      alert(error.error.error )
     });
   }
 }
