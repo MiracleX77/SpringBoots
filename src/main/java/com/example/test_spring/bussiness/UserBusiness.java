@@ -4,6 +4,7 @@ import com.example.test_spring.entity.User;
 import com.example.test_spring.exception.UserException;
 import com.example.test_spring.mapper.UserMapper;
 import com.example.test_spring.model.MLoginRequest;
+import com.example.test_spring.model.MLoginResponse;
 import com.example.test_spring.model.MRegisterRequest;
 import com.example.test_spring.model.MRegisterResponse;
 import com.example.test_spring.service.TokenService;
@@ -28,7 +29,7 @@ public class UserBusiness {
         this.userMapper = userMapper;
         this.tokenService = tokenService;
     }
-    public String login(MLoginRequest request) throws BaseException{
+    public MLoginResponse login(MLoginRequest request) throws BaseException{
         //validate request
         System.out.println(request.toString());
         //verify database
@@ -43,8 +44,9 @@ public class UserBusiness {
 
         //TODO: generate JWT
 
-        String token = tokenService.tokenize(user);
-        return token;
+        MLoginResponse response = new MLoginResponse();
+        response.setToken(tokenService.tokenize(user));
+        return response;
     }
 
     public MRegisterResponse register(MRegisterRequest request) throws BaseException {
