@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TokenFilter extends GenericFilterBean {
+public class  TokenFilter extends GenericFilterBean {
     private final TokenService tokenService;
 
     public TokenFilter(TokenService tokenService) {
@@ -28,9 +28,9 @@ public class TokenFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest request1 = (HttpServletRequest) request;
         String authorization = request1.getHeader("Authorization");
-
         if(ObjectUtils.isEmpty(authorization)){
             chain.doFilter(request,response);
             return;
@@ -43,7 +43,7 @@ public class TokenFilter extends GenericFilterBean {
         DecodedJWT decoded = tokenService.verify(token);
         if(decoded ==null){
             chain.doFilter(request,response);
-
+            return;
         }
         String principal = decoded.getClaim("principal").asString();
         String role = decoded.getClaim("role").asString();

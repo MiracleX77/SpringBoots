@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collections;
 
 @EnableWebSecurity
 @Configuration
@@ -38,28 +40,26 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public SecurityFilterChain configur(HttpSecurity http) throws Exception{
-        return http.cors().disable().csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeHttpRequests().requestMatchers(PUBLIC).anonymous()
-                .anyRequest().authenticated()
-                .and().apply(new tokenFilterConfiguerer(tokenService))
-                .and().build();
+    protected DefaultSecurityFilterChain configure(HttpSecurity http) throws Exception {
+        return http.cors(config -> {
+                    CorsConfiguration cors = new CorsConfiguration();
+                    cors.setAllowCredentials(true);
+                    cors.setAllowedOriginPatterns(Collections.singletonList("http://*"));
+                    cors.addAllowedHeader("*");
+                    cors.addAllowedMethod("GET");
+                    cors.addAllowedMethod("POST");
+                    cors.addAllowedMethod("PUT");
+                    cors.addAllowedMethod("DELETE");
+                    cors.addAllowedMethod("OPTIONS");
 
-    }
-    @Bean
-    public CorsFilter corsFilter(){
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("OPTIONS");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("DELETE");
-        source.registerCorsConfiguration("/**",config);
-        return new CorsFilter(source);
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    source.registerCorsConfiguration("/**", cors);
+
+                    config.configurationSource(source);
+                }).csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests().requestMatchers(PUBLIC).anonymous()
+                .anyRequest().authenticated()
+                .and().apply(new tokenFilterConfiguerer(tokenService)).and().build();
     }
 }
