@@ -30,6 +30,7 @@ public class  TokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest request1 = (HttpServletRequest) request;
+        System.out.println(request1);
         String authorization = request1.getHeader("Authorization");
         if(ObjectUtils.isEmpty(authorization)){
             chain.doFilter(request,response);
